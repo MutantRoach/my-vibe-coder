@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibeCoder // Stay Aesthetic</title>
+    <style>
+        :root {
+            --bg: #0b0e14;
+            --panel: #151921;
+            --accent: #7aa2f7;
+            --text: #a9b1d6;
+            --neon: #bb9af7;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            height: 100vh;
+            gap: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        /* Editor Section */
+        .editor-container {
+            background: var(--panel);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #24283b;
+        }
+
+        .header {
+            padding: 10px 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid #24283b;
+            color: var(--accent);
+        }
+
+        textarea {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            padding: 20px;
+            font-size: 1.1rem;
+            resize: none;
+            outline: none;
+            line-height: 1.6;
+        }
+
+        /* Sidebar Section */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .widget {
+            background: var(--panel);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #24283b;
+        }
+
+        /* Timer */
+        .timer-display {
+            font-size: 3rem;
+            text-align: center;
+            margin: 10px 0;
+            color: var(--neon);
+            text-shadow: 0 0 10px rgba(187, 154, 247, 0.3);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 5px 15px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        /* Music Player (YouTube Embed) */
+        .music-player {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .footer-note {
+            font-size: 0.7rem;
+            text-align: center;
+            opacity: 0.5;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Main Editor -->
+    <div class="editor-container">
+        <div class="header">● vibe_editor.sh</div>
+        <textarea id="codeEditor" placeholder="Write your thoughts or code here... (Auto-saves)"></textarea>
+    </div>
+
+    <!-- Right Widgets -->
+    <div class="sidebar">
+        <!-- Pomodoro -->
+        <div class="widget">
+            <div class="header" style="padding:0 0 10px 0">Focus Timer</div>
+            <div class="timer-display" id="timer">25:00</div>
+            <div class="controls">
+                <button onclick="startTimer()">Start</button>
+                <button onclick="resetTimer()">Reset</button>
+            </div>
+        </div>
+
+        <!-- Music -->
+        <div class="widget music-player">
+            <div class="header" style="padding:0 0 10px 0">Lo-Fi Stream</div>
+            <!-- YouTube Lofi Girl Live Stream -->
+            <iframe src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=0" allow="autoplay"></iframe>
+        </div>
+
+        <div class="footer-note">VIBE-CODER v1.0 | 100% Free</div>
+    </div>
+</div>
+
+<script>
+    // 1. Auto-save functionality
+    const editor = document.getElementById('codeEditor');
+    editor.value = localStorage.getItem('vibe_notes') || '';
+    editor.addEventListener('input', () => {
+        localStorage.setItem('vibe_notes', editor.value);
+    });
+
+    // 2. Timer functionality
+    let timeLeft = 25 * 60;
+    let timerId = null;
+
+    function updateDisplay() {
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        document.getElementById('timer').textContent = 
+            `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+        if (timerId) return;
+        timerId = setInterval(() => {
+            timeLeft--;
+            updateDisplay();
+            if (timeLeft <= 0) {
+                clearInterval(timerId);
+                alert("Time to take a break!");
+            }
+        }, 1000);
+    }
+
+    function resetTimer() {
+        clearInterval(timerId);
+        timerId = null;
+        timeLeft = 25 * 60;
+        updateDisplay();
+    }
+</script>
+
+</body>
+</html>
